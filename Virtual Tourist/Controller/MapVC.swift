@@ -13,11 +13,11 @@ import MapKit
 import CoreLocation
 
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
+    
+    
+    
+    var pin: [Pin] = []
     var dataController:DataController!
-    
-    
-  
-
     let annotation = MKPointAnnotation()
     @IBOutlet weak var mapView: MKMapView!
     var locationManager = CLLocationManager()
@@ -30,37 +30,54 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         locationManager.delegate = self
         configureLocationServices()
         addDoubleTap()
+        
         //NSFetchRequest  SELECT Query
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-//        // NSSortDesciotor is like ORDER by in MYSQL
-        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        //        // NSSortDesciotor is like ORDER by in MYSQL
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest){
-//            Notebooks and result if there is one there
-            PinPinSaved = result
-//            reload tableView or whatever you are using
-            mapView.reloadInputViews()
+            //Destroys Core Data Info
+//                        for object in result {
+//                            dataController.viewContext.delete(object)
+//                        }
+            //            Notebooks and result if there is one there
+            pin = result
+            //            reload tableView or whatever you are using
+            //            annotation.coordinate = CLLocationCoordinate2D(latitude:  , longitude: pin.long)
+            //            mapView.addAnnotation(annotation)
+            for object in pin {
+                annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
+                mapView.addAnnotation(annotation)
+ 
+            }
+               mapView.reloadInputViews()
         }
 
     }
     func addDoubleTap() {
         //Long gesture will drop the pin
         let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-//        doubleTap.numberOfTapsRequired = 1
+        //        doubleTap.numberOfTapsRequired = 1
         doubleTap.minimumPressDuration = 0.5
         doubleTap.delegate = self
         mapView.addGestureRecognizer(doubleTap)
-  
+        
     }
-    func addPin (lat: Double, long: Double) {
+    func savedPin (lat: Double, long: Double) {
         let pin = Pin(context: dataController.viewContext)
         pin.lat = lat
         pin.long = long
         pin.creationDate = Date()
         try? dataController.viewContext.save()
     }
-
-
+    
+    //    func addThis(pin: AnyObject) {
+    //        annotation.coordinate = CLLocationCoordinate2D(latitude:  , longitude: pin.long)
+    //        mapView.addAnnotation(annotation)
+    //    }
+    
+    
 }
 extension MapVC: MKMapViewDelegate{
     func centerMapOnUserLocation() {
@@ -72,18 +89,17 @@ extension MapVC: MKMapViewDelegate{
         //Drop pin on the map
         let touchPoint = sender.location(in: mapView)
         print(touchPoint)
-            let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+        let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
         print("This is the map gps coordinate\(touchCoordinate)")
         annotation.coordinate = CLLocationCoordinate2D(latitude: touchCoordinate.latitude , longitude: touchCoordinate.longitude)
         mapView.addAnnotation(annotation)
         //This will save the pin in coreData
         let lat = Double(touchCoordinate.latitude)
         let long = Double(touchCoordinate.longitude)
-        print("Printing this \(lat)")
-        addPin(lat: lat, long: long)
+        savedPin(lat: lat, long: long)
     }
-
-
+    
+    
 }
 extension MapVC: CLLocationManagerDelegate {
     func configureLocationServices() {

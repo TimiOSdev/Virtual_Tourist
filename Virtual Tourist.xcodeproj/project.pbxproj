@@ -12,7 +12,7 @@
 		9BEF97582053399E00E64C53 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF97572053399E00E64C53 /* AppDelegate.swift */; };
 		9BEF975A2053399E00E64C53 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF97592053399E00E64C53 /* MapVC.swift */; };
 		9BEF975D2053399E00E64C53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BEF975B2053399E00E64C53 /* Main.storyboard */; };
-		9BEF97602053399E00E64C53 /* Virtual_Tourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF975E2053399E00E64C53 /* Virtual_Tourist.xcdatamodeld */; };
+		9BEF97602053399E00E64C53 /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF975E2053399E00E64C53 /* VirtualTourist.xcdatamodeld */; };
 		9BEF97622053399E00E64C53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9BEF97612053399E00E64C53 /* Assets.xcassets */; };
 		9BEF97652053399E00E64C53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9BEF97632053399E00E64C53 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -76,7 +76,7 @@
 				9BEF97612053399E00E64C53 /* Assets.xcassets */,
 				9BEF97632053399E00E64C53 /* LaunchScreen.storyboard */,
 				9BEF97662053399E00E64C53 /* Info.plist */,
-				9BEF975E2053399E00E64C53 /* Virtual_Tourist.xcdatamodeld */,
+				9BEF975E2053399E00E64C53 /* VirtualTourist.xcdatamodeld */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -267,7 +267,7 @@
 			files = (
 				9BEF975A2053399E00E64C53 /* MapVC.swift in Sources */,
 				9B35DC6420AE084900BEDBA4 /* DataController.swift in Sources */,
-				9BEF97602053399E00E64C53 /* Virtual_Tourist.xcdatamodeld in Sources */,
+				9BEF97602053399E00E64C53 /* VirtualTourist.xcdatamodeld in Sources */,
 				9BEF97582053399E00E64C53 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,13 +463,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		9BEF975E2053399E00E64C53 /* Virtual_Tourist.xcdatamodeld */ = {
+		9BEF975E2053399E00E64C53 /* VirtualTourist.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				9BEF975F2053399E00E64C53 /* Virtual_Tourist.xcdatamodel */,
 			);
 			currentVersion = 9BEF975F2053399E00E64C53 /* Virtual_Tourist.xcdatamodel */;
-			path = Virtual_Tourist.xcdatamodeld;
+			path = VirtualTourist.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
