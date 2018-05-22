@@ -11,73 +11,70 @@ import CoreData
 import Alamofire
 import MapKit
 import CoreLocation
-
+var selectedAnnotation: MKPointAnnotation?
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
-    
-    
     
     var pin: [Pin] = []
     var dataController:DataController!
-    let annotation = MKPointAnnotation()
-    @IBOutlet weak var mapView: MKMapView!
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 7000
+    @IBOutlet weak var instructionText: UILabel!
+    @IBOutlet weak var editOutlet: UIBarButtonItem!
+    @IBOutlet weak var mapView: MKMapView!
+    
+
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         mapView.delegate = self
         locationManager.delegate = self
         configureLocationServices()
         addDoubleTap()
-        
-        //NSFetchRequest  SELECT Query
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        //        // NSSortDesciotor is like ORDER by in MYSQL
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest){
-            //Destroys Core Data Info
-//                        for object in result {
-//                            dataController.viewContext.delete(object)
-//                        }
-            //            Notebooks and result if there is one there
+//            DestroysCoreDataMaintence(result)
             pin = result
-            //            reload tableView or whatever you are using
-            //            annotation.coordinate = CLLocationCoordinate2D(latitude:  , longitude: pin.long)
-            //            mapView.addAnnotation(annotation)
             for object in pin {
+                let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
                 mapView.addAnnotation(annotation)
- 
             }
                mapView.reloadInputViews()
         }
-
     }
+    
     func addDoubleTap() {
+        
         //Long gesture will drop the pin
         let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-        //        doubleTap.numberOfTapsRequired = 1
-        doubleTap.minimumPressDuration = 0.5
+                doubleTap.numberOfTapsRequired = 2
+        doubleTap.minimumPressDuration = 0.0
         doubleTap.delegate = self
         mapView.addGestureRecognizer(doubleTap)
         
     }
     func savedPin (lat: Double, long: Double) {
+
         let pin = Pin(context: dataController.viewContext)
         pin.lat = lat
         pin.long = long
         pin.creationDate = Date()
         try? dataController.viewContext.save()
     }
-    
-    //    func addThis(pin: AnyObject) {
-    //        annotation.coordinate = CLLocationCoordinate2D(latitude:  , longitude: pin.long)
-    //        mapView.addAnnotation(annotation)
-    //    }
-    
-    
+    @IBAction func editPins(_ sender: UIBarButtonItem) {
+        
+        instructionText.text = "Tap once to delete"
+    }
+    //Maintence File
+    fileprivate func DestroysCoreDataMaintence(_ result: [Pin]) {
+        for object in result {
+            dataController.viewContext.delete(object)
+        }
+    }
 }
 extension MapVC: MKMapViewDelegate{
     func centerMapOnUserLocation() {
@@ -87,6 +84,7 @@ extension MapVC: MKMapViewDelegate{
     }
     @objc func dropPin(sender: UITapGestureRecognizer) {
         //Drop pin on the map
+        let annotation = MKPointAnnotation()
         let touchPoint = sender.location(in: mapView)
         print(touchPoint)
         let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
@@ -98,11 +96,10 @@ extension MapVC: MKMapViewDelegate{
         let long = Double(touchCoordinate.longitude)
         savedPin(lat: lat, long: long)
     }
-    
-    
 }
 extension MapVC: CLLocationManagerDelegate {
     func configureLocationServices() {
+        
         if authorizationStatus == .notDetermined {
             locationManager.requestAlwaysAuthorization()
         } else {
@@ -110,6 +107,7 @@ extension MapVC: CLLocationManagerDelegate {
         }
     }
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
         centerMapOnUserLocation()
     }
 }

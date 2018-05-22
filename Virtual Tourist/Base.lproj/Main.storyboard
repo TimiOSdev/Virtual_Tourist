@@ -62,8 +62,16 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="AgO-WO-KAg"/>
+                    <navigationItem key="navigationItem" id="AgO-WO-KAg">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="edit" id="bjT-MN-T3d">
+                            <connections>
+                                <action selector="editPins:" destination="BYZ-38-t0r" id="TIz-PA-7U4"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="editOutlet" destination="bjT-MN-T3d" id="DP9-Yu-gn6"/>
+                        <outlet property="instructionText" destination="gOu-WG-mSW" id="jWy-6D-NNx"/>
                         <outlet property="mapView" destination="Xzl-q2-Ms0" id="A0w-Yk-m5t"/>
                     </connections>
                 </viewController>
