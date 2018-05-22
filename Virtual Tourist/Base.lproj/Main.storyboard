@@ -63,21 +63,51 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="AgO-WO-KAg">
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="edit" id="bjT-MN-T3d">
-                            <connections>
-                                <action selector="editPins:" destination="BYZ-38-t0r" id="TIz-PA-7U4"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="Weq-f6-OfP"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="editOutlet" destination="bjT-MN-T3d" id="DP9-Yu-gn6"/>
                         <outlet property="instructionText" destination="gOu-WG-mSW" id="jWy-6D-NNx"/>
                         <outlet property="mapView" destination="Xzl-q2-Ms0" id="A0w-Yk-m5t"/>
+                        <segue destination="847-U1-8lm" kind="show" identifier="toPhoto" id="EnU-FV-6Cf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="256.80000000000001" y="166.8665667166417"/>
+        </scene>
+        <!--Collection View Controller-->
+        <scene sceneID="y2g-WA-lzn">
+            <objects>
+                <collectionViewController id="847-U1-8lm" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="XLD-tZ-cHX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EIc-hX-Ecw">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="liB-DH-Yfb">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="847-U1-8lm" id="ebS-6g-IrM"/>
+                            <outlet property="delegate" destination="847-U1-8lm" id="2kF-dj-3sQ"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4vd-Hv-oNE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1037" y="170"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dr6-fs-FWZ">

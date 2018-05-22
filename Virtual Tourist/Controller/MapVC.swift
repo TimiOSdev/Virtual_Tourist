@@ -11,19 +11,20 @@ import CoreData
 import Alamofire
 import MapKit
 import CoreLocation
+import Foundation
 var selectedAnnotation: MKPointAnnotation?
+
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
-    
-    var pin: [Pin] = []
-    var dataController:DataController!
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 7000
+    var pin: [Pin] = []
+    var dataController:DataController!
+
     @IBOutlet weak var instructionText: UILabel!
-    @IBOutlet weak var editOutlet: UIBarButtonItem!
     @IBOutlet weak var mapView: MKMapView!
     
-
+    var selectedAnnotation:MKAnnotation?
     
     override func viewDidLoad() {
         
@@ -38,21 +39,32 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         if let result = try? dataController.viewContext.fetch(fetchRequest){
 //            DestroysCoreDataMaintence(result)
             pin = result
+//            pin.removeAll(keepingCapacity: false)
+//            pin.removeAll()
             for object in pin {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
                 mapView.addAnnotation(annotation)
             }
+            print(pin)
                mapView.reloadInputViews()
         }
+
     }
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        self.navigationItem.rightBarButtonItem?.title = "Edit"
+    }
+    
+    
     
     func addDoubleTap() {
         
         //Long gesture will drop the pin
         let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-                doubleTap.numberOfTapsRequired = 2
-        doubleTap.minimumPressDuration = 0.0
+//                doubleTap.numberOfTapsRequired = 0
+        doubleTap.minimumPressDuration = 0.5
         doubleTap.delegate = self
         mapView.addGestureRecognizer(doubleTap)
         
@@ -65,10 +77,16 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         pin.creationDate = Date()
         try? dataController.viewContext.save()
     }
-    @IBAction func editPins(_ sender: UIBarButtonItem) {
-        
-        instructionText.text = "Tap once to delete"
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print(mapView.selectedAnnotations)
+        print(pin.count)
+//        performSegue(withIdentifier: "toPhoto", sender: hello)
     }
+
+    
+
+
     //Maintence File
     fileprivate func DestroysCoreDataMaintence(_ result: [Pin]) {
         for object in result {
