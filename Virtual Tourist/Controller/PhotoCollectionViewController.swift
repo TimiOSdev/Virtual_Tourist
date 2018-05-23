@@ -11,14 +11,15 @@ import UIKit
 private let reuseIdentifier = "Cell"
 
 class PhotoCollectionViewController: UICollectionViewController {
-//    var recievedInfo:MKAnnotation = []
+    var lat: Double = 0.0
+    var long: Double = 0.0
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
+        print(lat)
+        print(long)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 

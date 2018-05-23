@@ -15,6 +15,10 @@ import Foundation
 var selectedAnnotation: MKPointAnnotation?
 
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
+    var lat:Double?
+    var long: Double?
+    
+    
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 7000
@@ -46,7 +50,6 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
                 mapView.addAnnotation(annotation)
             }
-            print(pin)
                mapView.reloadInputViews()
         }
 
@@ -78,15 +81,27 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         try? dataController.viewContext.save()
     }
     
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print(mapView.selectedAnnotations)
-        print(pin.count)
-//        performSegue(withIdentifier: "toPhoto", sender: hello)
+        lat = view.annotation?.coordinate.latitude
+        long = view.annotation?.coordinate.longitude
+        print(" Lat:\(lat!) and long: \(long!)")
+            performSegue(withIdentifier: "toPhoto", sender: self)
+         }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toPhoto" {
+            let destinationVC = segue.destination as! PhotoCollectionViewController
+            destinationVC.lat = lat!
+            destinationVC.long = long!
+          
+        }
     }
-
+        
+   
     
 
-
+    
+    
     //Maintence File
     fileprivate func DestroysCoreDataMaintence(_ result: [Pin]) {
         for object in result {
@@ -129,3 +144,4 @@ extension MapVC: CLLocationManagerDelegate {
         centerMapOnUserLocation()
     }
 }
+
