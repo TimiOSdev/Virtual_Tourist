@@ -24,7 +24,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     let regionRadius: Double = 7000
     var pin: [Pin] = []
     var dataController:DataController!
-
+    
     @IBOutlet weak var instructionText: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     
@@ -41,18 +41,18 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest){
-//            DestroysCoreDataMaintence(result)
+            //            DestroysCoreDataMaintence(result)
             pin = result
-//            pin.removeAll(keepingCapacity: false)
-//            pin.removeAll()
+            //            pin.removeAll(keepingCapacity: false)
+            //            pin.removeAll()
             for object in pin {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
                 mapView.addAnnotation(annotation)
             }
-               mapView.reloadInputViews()
+            mapView.reloadInputViews()
         }
-
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         
@@ -66,14 +66,14 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         
         //Long gesture will drop the pin
         let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-//                doubleTap.numberOfTapsRequired = 0
+        //                doubleTap.numberOfTapsRequired = 0
         doubleTap.minimumPressDuration = 0.5
         doubleTap.delegate = self
         mapView.addGestureRecognizer(doubleTap)
         
     }
     func savedPin (lat: Double, long: Double) {
-
+        
         let pin = Pin(context: dataController.viewContext)
         pin.lat = lat
         pin.long = long
@@ -85,21 +85,20 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         lat = view.annotation?.coordinate.latitude
         long = view.annotation?.coordinate.longitude
-        print(" Lat:\(lat!) and long: \(long!)")
-            performSegue(withIdentifier: "toPhoto", sender: self)
-         }
+        performSegue(withIdentifier: "toPhoto", sender: self)
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toPhoto" {
             let destinationVC = segue.destination as! PhotoCollectionViewController
             destinationVC.lat = lat!
             destinationVC.long = long!
-          
+            
         }
     }
-        
-   
     
-
+    
+    
+    
     
     
     //Maintence File

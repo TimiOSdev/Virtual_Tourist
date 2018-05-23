@@ -7,9 +7,10 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="long" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="photos" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
         <element name="Photo" positionX="-252" positionY="0" width="128" height="60"/>
-        <element name="Pin" positionX="-729" positionY="-16" width="128" height="88"/>
+        <element name="Pin" positionX="-495" positionY="14" width="128" height="103"/>
     </elements>
 </model>

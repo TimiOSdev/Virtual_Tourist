@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '79A7616A9822E1D797C6E74FABE49893'
-               BlueprintName = 'Pods-Virtual Tourist'
+               BlueprintIdentifier = 'CDA50D84B108B7774DCD4018E9A3994E'
+               BlueprintName = 'SwiftyJSON'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'Pods-Virtual Tourist.framework'>
+               BuildableName = 'SwiftyJSON.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

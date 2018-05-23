@@ -7,28 +7,45 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
+import AlamofireImage
 
 private let reuseIdentifier = "Cell"
 
 class PhotoCollectionViewController: UICollectionViewController {
+    
+    @IBOutlet weak var imageCell: UICollectionViewCell!
+
+    var images = [String]()
     var lat: Double = 0.0
     var long: Double = 0.0
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(lat)
-        print(long)
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
         // Do any additional setup after loading the view.
+        
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        print(lat)
+        print(long)
+        sendRequestRequest(lat: lat, long: long)
+
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        images.removeAll()
+        print(images)
     }
 
     /*
@@ -51,12 +68,13 @@ class PhotoCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 0
+        
+        return images.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
+//        cell.imageCell.af_setImage(withURL: URL(string: "\(imageURL)")!)
         // Configure the cell
     
         return cell
@@ -92,5 +110,51 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     }
     */
+    func sendRequestRequest(lat: Double, long: Double) {
+        /**
+         Request
+         get https://api.flickr.com/services/rest/
+         */
+
+        // Add URL parameters
+        let urlParams = [
+            "method":"flickr.photos.search",
+            "api_key":"77693cba952ebe5dc5a74aef95f6921b",
+            "lat":"\(lat)",
+            "lon":"\(long)",
+            "extras":"url_s",
+            "format":"json",
+            "nojsoncallback":"1",
+//            "auth_token":"72157697160689435-baf44d1d99ed2e07",
+//            "api_sig":"4c5ffd85933b15ad87728424caffc26a",
+            ]
+        
+        // Fetch Request
+        Alamofire.request("https://api.flickr.com/services/rest/", method: .get, parameters: urlParams)
+            .validate(statusCode: 200..<300)
+            .responseJSON { response in
+                if response.result.isSuccess {
+                    let JSONback: JSON = JSON(response.value!)
+//                    print(JSONback)
+                    var count = 0
+                    repeat {
+                        self.images.append(JSONback["photos"]["photo"][count]["url_s"].stringValue)
+                        count += 1
+                    } while count <= 20
+
+                    print(self.images)
+                }
+                else {
+                    debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
+                }
+        }
+    }
+    
+    
+
+    
+
+    
+    
 
 }

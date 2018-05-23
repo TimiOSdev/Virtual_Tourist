@@ -6,6 +6,7 @@ target 'Virtual Tourist' do
   use_frameworks!
 pod 'Alamofire'
 pod 'AlamofireImage'
+pod 'SwiftyJSON'
   # Pods for Virtual Tourist
 
 
