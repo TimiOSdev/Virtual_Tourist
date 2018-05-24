@@ -90,19 +90,27 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="liB-DH-Yfb">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectionViewCell" id="liB-DH-Yfb" customClass="CollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="132" height="129"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="132" height="129"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VkV-82-VqJ">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rHz-7b-nQr">
                                             <rect key="frame" x="0.0" y="0.0" width="132" height="129"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="rHz-7b-nQr" secondAttribute="bottom" id="0ce-zE-QPK"/>
+                                    <constraint firstAttribute="trailing" secondItem="rHz-7b-nQr" secondAttribute="trailing" id="8q1-a1-Pb1"/>
+                                    <constraint firstItem="rHz-7b-nQr" firstAttribute="leading" secondItem="liB-DH-Yfb" secondAttribute="leading" id="RAw-QC-HSh"/>
+                                    <constraint firstItem="rHz-7b-nQr" firstAttribute="top" secondItem="liB-DH-Yfb" secondAttribute="top" id="cwJ-t6-Z6q"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="rHz-7b-nQr" id="IZD-Vf-fde"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -110,6 +118,9 @@
                             <outlet property="delegate" destination="847-U1-8lm" id="2kF-dj-3sQ"/>
                         </connections>
                     </collectionView>
+                    <connections>
+                        <outlet property="collectionView" destination="XLD-tZ-cHX" id="BUH-Yh-X55"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4vd-Hv-oNE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

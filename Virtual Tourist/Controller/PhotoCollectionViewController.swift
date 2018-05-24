@@ -10,17 +10,12 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import AlamofireImage
-
-private let reuseIdentifier = "Cell"
+import Foundation
+private let reuseIdentifier = "ImageCollectionCell"
 
 class PhotoCollectionViewController: UICollectionViewController {
-
     
-    
-    
-    
-    var imagedDownload = [Any]()
-    
+    var imagedDownload = [NSObject]()
     let downloader = ImageDownloader()
     let filter = AspectScaledToFillSizeCircleFilter(size: CGSize(width: 100.0, height: 100.0))
     var images = [URL]()
@@ -28,6 +23,9 @@ class PhotoCollectionViewController: UICollectionViewController {
     var long: Double = 0.0
     override func viewDidLoad() {
         super.viewDidLoad()
+        getImageWith(lat: lat, long: long) { (imageArray) in
+            print("\(imageArray.count)")
+        }
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -36,22 +34,19 @@ class PhotoCollectionViewController: UICollectionViewController {
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         // Do any additional setup after loading the view.
         
-        print(imagedDownload.count)
-        
+        print("Hello World")
+       
+        print("\(imagedDownload.count)")
     }
 
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
        
-        sendRequestRequest(lat: lat, long: long)
-        print("\(imagedDownload.count)")
+        
+        
       
         
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-
     }
 
     /*
@@ -68,21 +63,23 @@ class PhotoCollectionViewController: UICollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         
-        return images.count
+        return 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-//        cell.imageCell.af_setImage(withURL: URL(string: "\(imageURL)")!)
+
+        
+
         // Configure the cell
-    
+        
         return cell
     }
 
@@ -116,7 +113,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     }
     */
-    func sendRequestRequest(lat: Double, long: Double) {
+    func getImageWith(lat: Double, long: Double, completion: ([Any]) -> Void) {
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -131,10 +128,9 @@ class PhotoCollectionViewController: UICollectionViewController {
             "extras":"url_s",
             "format":"json",
             "nojsoncallback":"1",
-//            "auth_token":"72157697160689435-baf44d1d99ed2e07",
-//            "api_sig":"4c5ffd85933b15ad87728424caffc26a",
+
             ]
-        
+        var images: [Any] = []
         // Fetch Request
         Alamofire.request("https://api.flickr.com/services/rest/", method: .get, parameters: urlParams)
             .validate(statusCode: 200..<300)
@@ -148,30 +144,30 @@ class PhotoCollectionViewController: UICollectionViewController {
                         Alamofire.request("\(self.images[count])").responseImage { response in
 //                            debugPrint(response)
                             if let image = response.result.value {
-                                print("\(image)")
-                                self.imagedDownload.append(image)
-                                print("\(self.imagedDownload.count)")
-                                
+                                images.append(image)
+
                             }
+                            
                         }
                         
                         count += 1
                     } while count <= 20
-                   
-                  
-                }
-                else {
+                    
+                }else {
                     debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
                 }
+                
+
         }
-       
+
+        completion(images)
     }
-    
-    
-
-    
-
-    
-    
 
 }
+
+    
+
+    
+    
+
+
