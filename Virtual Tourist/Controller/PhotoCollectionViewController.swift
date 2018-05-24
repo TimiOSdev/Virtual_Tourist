@@ -14,10 +14,16 @@ import AlamofireImage
 private let reuseIdentifier = "Cell"
 
 class PhotoCollectionViewController: UICollectionViewController {
-    
-    @IBOutlet weak var imageCell: UICollectionViewCell!
 
-    var images = [String]()
+    
+    
+    
+    
+    var imagedDownload = [Any]()
+    
+    let downloader = ImageDownloader()
+    let filter = AspectScaledToFillSizeCircleFilter(size: CGSize(width: 100.0, height: 100.0))
+    var images = [URL]()
     var lat: Double = 0.0
     var long: Double = 0.0
     override func viewDidLoad() {
@@ -30,22 +36,22 @@ class PhotoCollectionViewController: UICollectionViewController {
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         // Do any additional setup after loading the view.
         
+        print(imagedDownload.count)
         
     }
 
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
-        print(lat)
-        print(long)
+       
         sendRequestRequest(lat: lat, long: long)
-
+        print("\(imagedDownload.count)")
+      
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        images.removeAll()
-        print(images)
+
     }
 
     /*
@@ -135,19 +141,30 @@ class PhotoCollectionViewController: UICollectionViewController {
             .responseJSON { response in
                 if response.result.isSuccess {
                     let JSONback: JSON = JSON(response.value!)
-//                    print(JSONback)
                     var count = 0
                     repeat {
-                        self.images.append(JSONback["photos"]["photo"][count]["url_s"].stringValue)
+                        self.images.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
+                        
+                        Alamofire.request("\(self.images[count])").responseImage { response in
+//                            debugPrint(response)
+                            if let image = response.result.value {
+                                print("\(image)")
+                                self.imagedDownload.append(image)
+                                print("\(self.imagedDownload.count)")
+                                
+                            }
+                        }
+                        
                         count += 1
                     } while count <= 20
-
-                    print(self.images)
+                   
+                  
                 }
                 else {
                     debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
                 }
         }
+       
     }
     
     
