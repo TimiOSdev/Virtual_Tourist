@@ -6,16 +6,14 @@
 //  Copyright © 2018 sudo. All rights reserved.
 //
 
-import UIKit
-
-class ImageCollectionViewCell: UICollectionViewCell {
-    var image: UIImage? {
-        didSet {
-            DispatchQueue.main.async {
-                //relaod the cell
-            }
-        }
-    }
-    
-    
-}
+//class ImageCollectionViewCell: UICollectionViewCell {
+//  var image: UIImage? {
+//    didSet {
+//      DispatchQueue.main.async {
+//        //relaod the cell
+//      }
+//    }
+//  }
+//  
+//  
+//}

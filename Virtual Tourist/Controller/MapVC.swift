@@ -41,10 +41,10 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest){
-            //            DestroysCoreDataMaintence(result)
+//                        DestroysCoreDataMaintence(result)
             pin = result
-            //            pin.removeAll(keepingCapacity: false)
-            //            pin.removeAll()
+//                        pin.removeAll(keepingCapacity: false)
+//                        pin.removeAll()
             for object in pin {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
@@ -60,16 +60,20 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         self.navigationItem.rightBarButtonItem?.title = "Edit"
     }
     
-    
+  @IBAction func setPin(sender: UILongPressGestureRecognizer) {
+
+  }
     
     func addDoubleTap() {
         
         //Long gesture will drop the pin
         let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-        //                doubleTap.numberOfTapsRequired = 0
-        doubleTap.minimumPressDuration = 0.5
+                        doubleTap.numberOfTapsRequired = 0
+      doubleTap.minimumPressDuration = 0.5
+      doubleTap.delaysTouchesBegan = true
         doubleTap.delegate = self
-        mapView.addGestureRecognizer(doubleTap)
+      
+    
         
     }
     func savedPin (lat: Double, long: Double) {
@@ -116,6 +120,8 @@ extension MapVC: MKMapViewDelegate{
     }
     @objc func dropPin(sender: UITapGestureRecognizer) {
         //Drop pin on the map
+      
+      if sender.state == UIGestureRecognizerState.began {
         let annotation = MKPointAnnotation()
         let touchPoint = sender.location(in: mapView)
         print(touchPoint)
@@ -127,6 +133,15 @@ extension MapVC: MKMapViewDelegate{
         let lat = Double(touchCoordinate.latitude)
         let long = Double(touchCoordinate.longitude)
         savedPin(lat: lat, long: long)
+        
+////        let pinAnnotation = annotation()  // PinAnnotation is my custom annotation class
+//        annotation.setCoordinate(location)
+//
+//        self.mapView.addAnnotation(annotation)
+      }
+      
+      
+      
     }
 }
 extension MapVC: CLLocationManagerDelegate {

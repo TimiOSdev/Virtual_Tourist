@@ -10,54 +10,44 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import AlamofireImage
-import Foundation
+//import Foundation
 private let reuseIdentifier = "ImageCollectionCell"
 
 class PhotoCollectionViewController: UICollectionViewController {
-    
-    var imagedDownload = [NSObject]()
-    let downloader = ImageDownloader()
-    let filter = AspectScaledToFillSizeCircleFilter(size: CGSize(width: 100.0, height: 100.0))
-    var images = [URL]()
+  @IBOutlet var flowLayout: UICollectionView!
+
+  
+  
+    var images = [UIImage]()
+  var ill = [UIImage]()
     var lat: Double = 0.0
     var long: Double = 0.0
+  
     override func viewDidLoad() {
         super.viewDidLoad()
-        getImageWith(lat: lat, long: long) { (imageArray) in
-            print("\(imageArray.count)")
-        }
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         // Do any additional setup after loading the view.
-        
-        print("Hello World")
-       
-        print("\(imagedDownload.count)")
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
-       
-        
-        
-      
-        
+      getImageWith(lat: lat, long: long) { (image) in
+        self.images = image
+        print(self.images)
+        self.collectionView?.reloadData()
+      }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    // Show the navigation bar on other view controllers
+    self.images.removeAll()
+  }
 
     // MARK: UICollectionViewDataSource
 
@@ -70,18 +60,24 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         
-        return 0
+        return self.images.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+
+      
+      override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = UICollectionViewCell()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-
-        
-
-        // Configure the cell
+//        let memeImages = self.images[indexPath.row]
+        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 125, height: 125))
+        imageview.contentMode = UIViewContentMode.scaleAspectFit
+        let image = self.images
+        imageview.image = self.images[indexPath.row]
+        cell.contentView.addSubview(imageview)
         
         return cell
-    }
+      }
 
     // MARK: UICollectionViewDelegate
 
@@ -92,12 +88,11 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     */
 
-    /*
-    // Uncomment this method to specify if the specified item should be selected
+
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
-    */
+
 
     /*
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
@@ -113,7 +108,10 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     }
     */
-    func getImageWith(lat: Double, long: Double, completion: ([Any]) -> Void) {
+
+  
+  
+  func getImageWith(lat: Double, long: Double, complete: @escaping ([UIImage])-> Void) {
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -130,37 +128,39 @@ class PhotoCollectionViewController: UICollectionViewController {
             "nojsoncallback":"1",
 
             ]
-        var images: [Any] = []
+        var images: [URL] = []
         // Fetch Request
-        Alamofire.request("https://api.flickr.com/services/rest/", method: .get, parameters: urlParams)
+      Alamofire.request("https://api.flickr.com/services/rest/", method: .get, parameters: urlParams)
             .validate(statusCode: 200..<300)
             .responseJSON { response in
                 if response.result.isSuccess {
-                    let JSONback: JSON = JSON(response.value!)
+                    let JSONback: JSON = JSON(response.result.value!)
                     var count = 0
                     repeat {
-                        self.images.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
+                        images.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
                         
-                        Alamofire.request("\(self.images[count])").responseImage { response in
-//                            debugPrint(response)
+                      Alamofire.request("\(images[count])").responseImage { response in
+                        
                             if let image = response.result.value {
-                                images.append(image)
-
+                                self.ill.append(image)
+                              complete(self.ill)
+//                              self.collectionView?.reloadData()
+                          
                             }
                             
                         }
                         
                         count += 1
-                    } while count <= 20
-                    
+                    } while count <= 5
+                  
                 }else {
                     debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
                 }
-                
+              
 
         }
 
-        completion(images)
+
     }
 
 }
