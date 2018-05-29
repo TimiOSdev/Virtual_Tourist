@@ -21,7 +21,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
-    let regionRadius: Double = 7000
+    let regionRadius: Double = 10000
     var pin: [Pin] = []
     var dataController:DataController!
     
@@ -72,6 +72,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
       doubleTap.minimumPressDuration = 0.5
       doubleTap.delaysTouchesBegan = true
         doubleTap.delegate = self
+       mapView.addGestureRecognizer(doubleTap)
       
     
         

@@ -18,6 +18,7 @@ class PhotoCollectionViewController: UICollectionViewController {
 
   
   
+  
     var images = [UIImage]()
   var ill = [UIImage]()
     var lat: Double = 0.0
@@ -39,7 +40,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         super.viewWillAppear(animated)
       getImageWith(lat: lat, long: long) { (image) in
         self.images = image
-        print(self.images)
+        print(self.images.count)
         self.collectionView?.reloadData()
       }
     }
@@ -47,6 +48,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     super.viewWillDisappear(animated)
     // Show the navigation bar on other view controllers
     self.images.removeAll()
+    ill.removeAll()
   }
 
     // MARK: UICollectionViewDataSource
@@ -67,13 +69,13 @@ class PhotoCollectionViewController: UICollectionViewController {
 
       
       override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = UICollectionViewCell()
+        //        let cell = UICollectionViewCell()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-//        let memeImages = self.images[indexPath.row]
-        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 125, height: 125))
+        //        let memeImages = self.images[indexPath.row]
+        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 115, height: 115))
         imageview.contentMode = UIViewContentMode.scaleAspectFit
-        let image = self.images
-        imageview.image = self.images[indexPath.row]
+        let image = self.images[indexPath.row]
+        imageview.image = image
         cell.contentView.addSubview(imageview)
         
         return cell
@@ -125,8 +127,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             "lon":"\(long)",
             "extras":"url_s",
             "format":"json",
-            "nojsoncallback":"1",
-
+            "nojsoncallback":"1"
             ]
         var images: [URL] = []
         // Fetch Request
