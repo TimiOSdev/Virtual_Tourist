@@ -84,17 +84,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EIc-hX-Ecw">
-                            <size key="itemSize" width="112" height="109"/>
+                            <size key="itemSize" width="134" height="135"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCollectionCell" id="liB-DH-Yfb">
-                                <rect key="frame" x="0.0" y="0.0" width="112" height="109"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" reuseIdentifier="" id="liB-DH-Yfb">
+                                <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="112" height="109"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </view>
                             </collectionViewCell>
@@ -110,6 +110,27 @@
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4vd-Hv-oNE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view alpha="0.89999997615814209" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yCw-rd-g0w">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press &amp; hold to drop pin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hoZ-GA-byv">
+                            <rect key="frame" x="99" y="13" width="178" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="vxA-vn-UOw"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="16"/>
+                            <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.97452121970000005" green="0.70873218770000002" blue="0.16803631190000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="hoZ-GA-byv" firstAttribute="centerX" secondItem="yCw-rd-g0w" secondAttribute="centerX" id="c7j-0Z-0CW"/>
+                        <constraint firstAttribute="height" constant="70" id="i2f-Hb-Tro"/>
+                        <constraint firstItem="hoZ-GA-byv" firstAttribute="centerY" secondItem="yCw-rd-g0w" secondAttribute="centerY" id="odb-nz-sg2"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="XAj-rE-99Q"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="725.60000000000002" y="169.56521739130437"/>
         </scene>
