@@ -22,11 +22,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        //    self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        //
-   
+        self.collectionView?.dataSource = self
         self.collectionView?.allowsMultipleSelection = true
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
         // Register cell classes
@@ -71,26 +67,33 @@ class PhotoCollectionViewController: UICollectionViewController {
         
         let cell = collectionView.cellForItem(at: indexPath)
         self.imagesSelected.append(self.images[indexPath.row])
-        
-        
         cell?.layer.borderWidth = 2.0
         cell?.layer.borderColor = UIColor.red.cgColor
-        
-        if cell?.layer.borderColor == UIColor.red.cgColor {
+        if cell?.layer.borderColor == UIColor.red.cgColor && self.imagesSelected.count > 0 {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
         }
-        
+ 
     }
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath)
         
-        if cell?.isSelected == false{
+        let cell = collectionView.cellForItem(at: indexPath)
+            imagesSelected.remove(at: indexPath.row)
+        print(indexPath.row)
+        print(self.imagesSelected.count)
+        if cell?.isSelected == false {
             cell?.layer.borderColor = UIColor.clear.cgColor
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
+            print(self.imagesSelected)
+            if self.imagesSelected.count == 0 {
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(getImageWith))
+            } else {
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
+            }
+            
         }
+ 
     }
     
-    
+
     
     
     
@@ -113,7 +116,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     
     
-    func getImageWith(lat: Double, long: Double, complete: @escaping ([UIImage])-> Void) {
+    @objc func getImageWith(lat: Double, long: Double, complete: @escaping ([UIImage])-> Void) {
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -223,12 +226,11 @@ class PhotoCollectionViewController: UICollectionViewController {
   
         for i in self.imagesSelected {
             if self.images.contains(i) {
-                let kill = self.images.index(of: i)
-                self.images.remove(at: kill!)
-                self.collectionView?.reloadData()
+                let killImage = self.images.index(of: i)
+                self.images.remove(at: killImage!)
             }
-            
         }
+        self.collectionView?.reloadData()
     }
 }
 
