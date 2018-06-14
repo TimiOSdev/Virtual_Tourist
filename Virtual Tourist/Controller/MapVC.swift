@@ -73,7 +73,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         
         //Long gesture will drop the pin
         let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-        doubleTap.numberOfTapsRequired = 0
+        doubleTap.numberOfTapsRequired = 1
         doubleTap.minimumPressDuration = 0.5
         doubleTap.delaysTouchesBegan = true
         doubleTap.delegate = self
@@ -102,10 +102,9 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         pin.long = long
         pin.creationDate = Date()
         try? dataController.viewContext.save()
-        
-       
+        viewDidLoad()
     }
-    
+
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if isEditing == true {
@@ -144,6 +143,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         
         instructionText.text = "Press & hold to drop pin"
         isEditing = false
+        
         self.viewDidLoad()
     }
 }
@@ -168,17 +168,24 @@ extension MapVC: MKMapViewDelegate{
             let long = Double(touchCoordinate.longitude)
             savedPin(lat: lat, long: long)
         }
-        
-        
-        
     }
     @objc func removePin(sender: UITapGestureRecognizer) {
         //Drop pin on the map
         let selectedPin = mapView.selectedAnnotations.first
         if selectedPin != nil {
             mapView.removeAnnotation(selectedPin!)
+            
+            for pin in pin {
+                if pin.lat == selectedPin?.coordinate.latitude {
+                   dataController.viewContext.delete(pin)
+                    try? dataController.viewContext.save()
+                    
+                }
+            }
+            
+            print(selectedPin!)
         }
-        
+      
         
     }
 }
