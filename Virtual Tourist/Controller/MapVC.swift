@@ -68,13 +68,13 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     }
     //MARK: ADD and DELETE Pin and functions
     func addHoldTap() {
-        
-        //Long gesture will drop the pin
-        let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-        singleTap.minimumPressDuration = 0.8
-        singleTap.delaysTouchesBegan = true
-        singleTap.delegate = self
-        mapView.addGestureRecognizer(singleTap)
+    
+            //Long gesture will drop the pin
+            let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
+            singleTap.minimumPressDuration = 0.8
+            singleTap.delaysTouchesBegan = true
+            singleTap.delegate = self
+            mapView.addGestureRecognizer(singleTap)
     }
 //    func deleteHoldTap() {
 //
@@ -110,13 +110,13 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         if isEditing == true {
             selectedPin = mapView.selectedAnnotations.first
             mapView.removeAnnotation(selectedPin!)
-            
+            pinRemovalOn(selectedPin)
         }else {
             lat = view.annotation?.coordinate.latitude
             long = view.annotation?.coordinate.longitude
             performSegue(withIdentifier: "toPhoto", sender: self)
         }
-        pinRemovalOn(selectedPin)
+        
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toPhoto" {
@@ -145,37 +145,24 @@ extension MapVC: MKMapViewDelegate{
     //MARK: OBJC objects
     @objc func dropPin(sender: UITapGestureRecognizer) {
         //Drop pin on the map
-        if sender.state == UIGestureRecognizerState.began {
-            let annotation = MKPointAnnotation()
-            let touchPoint = sender.location(in: mapView)
-            print(touchPoint)
-            let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            print("This is the map gps coordinate\(touchCoordinate)")
-            annotation.coordinate = CLLocationCoordinate2D(latitude: touchCoordinate.latitude , longitude: touchCoordinate.longitude)
-            mapView.addAnnotation(annotation)
-            //This will save the pin in coreData
-            let lat = Double(touchCoordinate.latitude)
-            let long = Double(touchCoordinate.longitude)
-            savedPin(lat: lat, long: long)
+        if isEditing == false {
+            if sender.state == UIGestureRecognizerState.began {
+                let annotation = MKPointAnnotation()
+                let touchPoint = sender.location(in: mapView)
+                print(touchPoint)
+                let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+                print("This is the map gps coordinate\(touchCoordinate)")
+                annotation.coordinate = CLLocationCoordinate2D(latitude: touchCoordinate.latitude , longitude: touchCoordinate.longitude)
+                mapView.addAnnotation(annotation)
+                //This will save the pin in coreData
+                let lat = Double(touchCoordinate.latitude)
+                let long = Double(touchCoordinate.longitude)
+                savedPin(lat: lat, long: long)
+            }
+            
         }
+
     }
-//    @objc func removePin(sender: UITapGestureRecognizer) {
-//        //Drop pin on the map
-//        let selectedPin = mapView.selectedAnnotations.first
-//        if selectedPin != nil {
-//            mapView.removeAnnotation(selectedPin!)
-//
-//            for pin in pin {
-//                if pin.lat == selectedPin?.coordinate.latitude {
-//                    dataController.viewContext.delete(pin)
-//                    try? dataController.viewContext.save()
-//                }
-//            }
-//            print(selectedPin!)
-//        }
-//
-//
-//    }
     @objc func editPins() {
         isEditing = true
         mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: true)
@@ -192,7 +179,7 @@ extension MapVC: MKMapViewDelegate{
     }
     
     
-    /////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////End of Rip Tide
     
 }
 extension MapVC: CLLocationManagerDelegate {

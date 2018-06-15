@@ -10,8 +10,10 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import AlamofireImage
-//import Foundation
+
 private let reuseIdentifier = "ImageCollectionCell"
+
+
 class PhotoCollectionViewController: UICollectionViewController {
     @IBOutlet var flowLayout: UICollectionView!
     var images = [UIImage]()
@@ -20,6 +22,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     var lat: Double = 0.0
     var long: Double = 0.0
     
+    // ROLL TIDE
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView?.dataSource = self
