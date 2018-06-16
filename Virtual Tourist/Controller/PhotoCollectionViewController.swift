@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 import Alamofire
 import SwiftyJSON
 import AlamofireImage
@@ -16,9 +17,11 @@ private let reuseIdentifier = "ImageCollectionCell"
 
 class PhotoCollectionViewController: UICollectionViewController {
     @IBOutlet var flowLayout: UICollectionView!
-    var images = [UIImage]()
+
+    var dataController:DataController!
+    var images = [Data]()
     var imagesSelected = [UIImage]()
-    var ill = [UIImage]()
+    var ill = [Data]()
     var lat: Double = 0.0
     var long: Double = 0.0
     
@@ -28,14 +31,16 @@ class PhotoCollectionViewController: UICollectionViewController {
         self.collectionView?.dataSource = self
         self.collectionView?.allowsMultipleSelection = true
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
+        
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         getImageWith(lat: lat, long: long) { (image) in
+
             self.images = image
+            
             if self.images.count == 9 {
-                self.collectionView?.reloadData()
+//                self.collectionView?.reloadData()
             }
-            print(self.images.count)
             
         }
     }
@@ -51,7 +56,14 @@ class PhotoCollectionViewController: UICollectionViewController {
         // Show the navigation bar on other view controllers
         
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+       
+    }
+    func savedImagesInPersistance (image: UIImage) {
+
+       print(image)
+    }
     // MARK: UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -69,7 +81,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let cell = collectionView.cellForItem(at: indexPath)
-        self.imagesSelected.append(self.images[indexPath.row])
+//        self.imagesSelected.append(self.images[indexPath.row])
         cell?.layer.borderWidth = 2.0
         cell?.layer.borderColor = UIColor.red.cgColor
         if cell?.layer.borderColor == UIColor.red.cgColor && self.imagesSelected.count > 0 {
@@ -101,16 +113,16 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //        let cell = UICollectionViewCell()
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        //        let memeImages = self.images[indexPath.row]
-        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 135, height: 135))
-        
-        
-        //    imageview.contentMode = UIViewContentMode.scaleAspectFit
-        let image = self.images[indexPath.row]
-        imageview.image = image
-        cell.contentView.addSubview(imageview)
+                let cell = UICollectionViewCell()
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+//        //        let memeImages = self.images[indexPath.row]
+//        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 135, height: 135))
+//
+//
+//        //    imageview.contentMode = UIViewContentMode.scaleAspectFit
+//        let image = self.images[indexPath.row]
+//        imageview.image = image
+//        cell.contentView.addSubview(imageview)
         return cell
     }
     
@@ -119,7 +131,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     
     
-    @objc func getImageWith(lat: Double, long: Double, complete: @escaping ([UIImage])-> Void) {
+    @objc func getImageWith(lat: Double, long: Double, complete: @escaping ([Data])-> Void) {
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -151,7 +163,10 @@ class PhotoCollectionViewController: UICollectionViewController {
                         Alamofire.request("\(images[count])").responseImage { response in
                             
                             if let image = response.result.value {
-                                self.ill.append(image)
+                                let kill = UIImagePNGRepresentation(image)
+                                print("HELLO WORLD \(kill!)")
+                                
+                                self.ill.append(kill!)
                                 complete(self.ill)
                             }
                         }
@@ -164,51 +179,51 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     
-    func getImageWithAnd(lat: Double, long: Double, complete: @escaping ([UIImage])-> Void) {
-        /**
-         Request
-         get https://api.flickr.com/services/rest/
-         */
-        
-        // Add URL parameters
-        let urlParams = [
-            "method":"flickr.photos.search",
-            "api_key":"77693cba952ebe5dc5a74aef95f6921b",
-            "lat":"\(lat)",
-            "lon":"\(long)",
-            "extras":"url_s",
-            "format":"json",
-            "nojsoncallback":"1"
-        ]
-        var images: [URL] = []
-        // Fetch Request
-        Alamofire.request("https://api.flickr.com/services/rest/", method: .get, parameters: urlParams)
-            .validate(statusCode: 200..<300)
-            .responseJSON { response in
-                if response.result.isSuccess {
-                    let JSONback: JSON = JSON(response.result.value!)
-                    var count = 0
-                    
-                    repeat {
-                        images.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
-                        if images.count == 0 {
-                            return
-                        }
-                        Alamofire.request("\(images[count])").responseImage { response in
-                            
-                            if let image = response.result.value {
-                                self.ill.append(image)
-                                complete(self.ill)
-                            }
-                        }
-                        count += 1
-                    } while count <= 8
-                    
-                }else {
-                    debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
-                }
-        }
-    }
+//    func getImageWithAnd(lat: Double, long: Double, complete: @escaping ([UIImage])-> Void) {
+//        /**
+//         Request
+//         get https://api.flickr.com/services/rest/
+//         */
+//
+//        // Add URL parameters
+//        let urlParams = [
+//            "method":"flickr.photos.search",
+//            "api_key":"77693cba952ebe5dc5a74aef95f6921b",
+//            "lat":"\(lat)",
+//            "lon":"\(long)",
+//            "extras":"url_s",
+//            "format":"json",
+//            "nojsoncallback":"1"
+//        ]
+//        var images: [URL] = []
+//        // Fetch Request
+//        Alamofire.request("https://api.flickr.com/services/rest/", method: .get, parameters: urlParams)
+//            .validate(statusCode: 200..<300)
+//            .responseJSON { response in
+//                if response.result.isSuccess {
+//                    let JSONback: JSON = JSON(response.result.value!)
+//                    var count = 0
+//
+//                    repeat {
+//                        images.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
+//                        if images.count == 0 {
+//                            return
+//                        }
+//                        Alamofire.request("\(images[count])").responseImage { response in
+//
+//                            if let image = response.result.value {
+//                                self.ill.append(image)
+//                                complete(self.ill)
+//                            }
+//                        }
+//                        count += 1
+//                    } while count <= 8
+//
+//                }else {
+//                    debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
+//                }
+//        }
+//    }
     
     // MARK: OBJC functions
     
@@ -226,14 +241,14 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     @objc func deletePhotos() {
-  
-        for i in self.imagesSelected {
-            if self.images.contains(i) {
-                let killImage = self.images.index(of: i)
-                self.images.remove(at: killImage!)
-            }
-        }
-        self.collectionView?.reloadData()
+
+//        for i in self.imagesSelected {
+//            if self.images.contains(i) {
+//                let killImage = self.images.index(of: i)
+//                self.images.remove(at: killImage!)
+//            }
+//        }
+//        self.collectionView?.reloadData()
     }
 }
 
