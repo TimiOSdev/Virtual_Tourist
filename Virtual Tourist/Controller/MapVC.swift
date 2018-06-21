@@ -11,9 +11,6 @@ import CoreData
 import Alamofire
 import MapKit
 import CoreLocation
-import Foundation
-
-
 //MARK: GLOBAL VARIABLES
 var selectedAnnotation: MKPointAnnotation?
 var isEditing = false
@@ -123,6 +120,9 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             let destinationVC = segue.destination as! PhotoCollectionViewController
             destinationVC.lat = lat!
             destinationVC.long = long!
+            
+            let MapVC = navigationController?.topViewController as! MapVC
+            MapVC.dataController = dataController
         }
     }
     //Maintence File

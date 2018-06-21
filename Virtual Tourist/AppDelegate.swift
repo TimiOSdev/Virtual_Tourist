@@ -21,6 +21,9 @@ let dataController = DataController(modelName: "VirtualTourist")
         let navigationController = window?.rootViewController as! UINavigationController
         let MapVC = navigationController.topViewController as! MapVC
         MapVC.dataController = dataController
+//        let navigationControllers = window?.rootViewController as! UICollectionView
+//        let collectionVC = navigationControllers as! PhotoCollectionViewController
+//        collectionVC.dataController = dataController
         
         return true
     }
