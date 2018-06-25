@@ -34,7 +34,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-    
+        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editPins))
         mapView.delegate = self
         locationManager.delegate = self
@@ -94,9 +94,11 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     fileprivate func pinRemovalOn(_ sellected: MKAnnotation?) {
         for pin in pin {
             if sellected?.coordinate.latitude == pin.lat {
+                let pin = pin
+                print(pin)
                 dataController.viewContext.delete(pin)
-                
                 try? dataController.viewContext.save()
+                
             }
             
         }
@@ -120,9 +122,8 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             let destinationVC = segue.destination as! PhotoCollectionViewController
             destinationVC.lat = lat!
             destinationVC.long = long!
-            
-            let MapVC = navigationController?.topViewController as! MapVC
-            MapVC.dataController = dataController
+            destinationVC.dataController = self.dataController
+    
         }
     }
     //Maintence File

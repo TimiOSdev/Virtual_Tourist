@@ -18,62 +18,58 @@ private let reuseIdentifier = "ImageCollectionCell"
 class PhotoCollectionViewController: UICollectionViewController {
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
     @IBOutlet var flowLayout: UICollectionView!
-    var killer = Photo()
-//    var images: Photo!
+    var imageData: Data?
+  
+    var pin: Pin!
+    var images: [Photo] = []
+  var dataController:DataController!
     var imagesData = [UIImage]()
     var imagesSelected = [UIImage]()
-    var ill = [NSData]()
     var lat: Double = 0.0
-      var dataController:DataController!
     var long: Double = 0.0
-    
     // ROLL TIDE
-
+    
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        self.imagesData = []
 
+   
         self.collectionView?.dataSource = self
         self.collectionView?.allowsMultipleSelection = true
-        //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector())
-        //        let imager = Photo(context: dataController.viewContext)
-        // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-//        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-//        let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
         
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+//        let predicate = NSPredicate(format: "photo IN %@", )
+//
+//        fetchRequest.predicate = predicate
+                let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+                if let result = try? dataController.viewContext.fetch(fetchRequest) {
+  
+                    images = result
+                    for object in images {
+                        self.imagesData.append(UIImage(data: object.imageData!)!)
+                      
+                    }
+                    self.collectionView?.reloadData()
+        }
         
-        
-//        if let result = try? dataController.viewContext.fetch(fetchRequest) {
-//            images = result
-//            for object in images {
-//                print(object)
-//                //                let annotation = MKPointAnnotation()
-//                //                annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
-//                //                mapView.addAnnotation(annotation)
-//            }
-//            collectionView?.reloadData()
-//        }
     }
     
-
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
+        
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        getImageWith(lat: lat, long: long) {(image) in
-           
- 
-            self.imagesData.append(image)
-            print(self.imagesData.count)
-            self.collectionView?.reloadData()
-        }
         
     }
+
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // Show the navigation bar on other view controllers
@@ -134,13 +130,16 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = UICollectionViewCell()
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-                let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 120, height: 120))
-                let image = self.imagesData[indexPath.row]
-
-                imageview.image = image
-                cell.contentView.addSubview(imageview)
+        //        let cell = UICollectionViewCell()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+//        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 120, height: 120))
+//        let image = self.imagesData[indexPath.row]
+//
+//        imageview.image = image
+//        cell.contentView.addSubview(imageview)
+//        if let image = cell.viewWithTag(100) as? UIImage {
+//           image.images = self.imagesData[indexPath.row]
+//        }
         return cell
     }
     
@@ -148,8 +147,13 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     
     
-
-    @objc func getImageWith(lat: Double, long: Double, complete: @escaping (UIImage)-> Void) {
+//    , complete: @escaping (Data)-> Void
+    fileprivate func saveImageToCoreData(_ image: Data) {
+        
+       
+    }
+    
+    @objc func getImageWith(lat: Double, long: Double) {
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -171,14 +175,20 @@ class PhotoCollectionViewController: UICollectionViewController {
             .responseJSON { response in
                 if response.result.isSuccess {
                     let JSONback: JSON = JSON(response.result.value!)
-                    print(JSONback)
                     var count = 0
                     repeat {
+//                        guard imageURLs.count != 0 else { return }
                         imageURLs.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
-                        guard imageURLs.count != 0 else { return }
-                        Alamofire.request("\(imageURLs[count])").responseImage { response in
+                        
+                        Alamofire.request("\(imageURLs[count])").responseData { response in
                             
-                            complete(response.result.value!)
+                            if let image = response.data {
+                                let photo = Photo(context: self.dataController.viewContext)
+                                photo.imageData = image
+                                self.images.insert(photo, at: 0)
+                                print(self.images)
+                                try? self.dataController.viewContext.save()
+                            }
                         }
                         count += 1
                     } while count <= 8
@@ -186,8 +196,8 @@ class PhotoCollectionViewController: UICollectionViewController {
                 }else {
                     debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
                 }
-                print(self.imagesData)
-        }
+                
+       }
     }
     
     
@@ -218,7 +228,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         //        self.collectionView?.reloadData()
     }
     
-
+    
 }
 
 

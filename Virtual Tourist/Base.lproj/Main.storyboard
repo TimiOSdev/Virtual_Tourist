@@ -82,7 +82,7 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" dataMode="prototypes" id="XLD-tZ-cHX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EIc-hX-Ecw">
                             <size key="itemSize" width="134" height="135"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -96,7 +96,20 @@
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F3r-rm-z5y">
+                                            <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
+                                        </imageView>
+                                    </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="leading" secondItem="liB-DH-Yfb" secondAttribute="leading" id="GfH-nO-vo7"/>
+                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="top" secondItem="liB-DH-Yfb" secondAttribute="top" id="KKe-Up-4SX"/>
+                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="centerY" secondItem="liB-DH-Yfb" secondAttribute="centerY" id="V8x-Zq-x7g"/>
+                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="centerX" secondItem="liB-DH-Yfb" secondAttribute="centerX" id="dkE-n1-6YR"/>
+                                    <constraint firstAttribute="trailing" secondItem="F3r-rm-z5y" secondAttribute="trailing" id="jRr-vF-Fg2"/>
+                                    <constraint firstAttribute="bottom" secondItem="F3r-rm-z5y" secondAttribute="bottom" id="lAL-eY-aUf"/>
+                                </constraints>
                             </collectionViewCell>
                         </cells>
                         <connections>
