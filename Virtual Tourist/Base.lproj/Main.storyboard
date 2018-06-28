@@ -75,10 +75,10 @@
             </objects>
             <point key="canvasLocation" x="56.799999999999997" y="169.56521739130437"/>
         </scene>
-        <!--Photo Collection View Controller-->
+        <!--Photo Album View Controller-->
         <scene sceneID="y2g-WA-lzn">
             <objects>
-                <collectionViewController storyboardIdentifier="toPhoto" useStoryboardIdentifierAsRestorationIdentifier="YES" id="847-U1-8lm" customClass="PhotoCollectionViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="toPhoto" useStoryboardIdentifierAsRestorationIdentifier="YES" id="847-U1-8lm" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" dataMode="prototypes" id="XLD-tZ-cHX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -90,26 +90,13 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" reuseIdentifier="ImageCollectionCell" id="liB-DH-Yfb" customClass="ImageCollectionCell">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" reuseIdentifier="ImageCollectionCell" id="liB-DH-Yfb" customClass="ImageCollectionCell">
                                 <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F3r-rm-z5y">
-                                            <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
-                                        </imageView>
-                                    </subviews>
                                 </view>
-                                <constraints>
-                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="leading" secondItem="liB-DH-Yfb" secondAttribute="leading" id="GfH-nO-vo7"/>
-                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="top" secondItem="liB-DH-Yfb" secondAttribute="top" id="KKe-Up-4SX"/>
-                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="centerY" secondItem="liB-DH-Yfb" secondAttribute="centerY" id="V8x-Zq-x7g"/>
-                                    <constraint firstItem="F3r-rm-z5y" firstAttribute="centerX" secondItem="liB-DH-Yfb" secondAttribute="centerX" id="dkE-n1-6YR"/>
-                                    <constraint firstAttribute="trailing" secondItem="F3r-rm-z5y" secondAttribute="trailing" id="jRr-vF-Fg2"/>
-                                    <constraint firstAttribute="bottom" secondItem="F3r-rm-z5y" secondAttribute="bottom" id="lAL-eY-aUf"/>
-                                </constraints>
                             </collectionViewCell>
                         </cells>
                         <connections>

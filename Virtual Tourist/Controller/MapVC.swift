@@ -44,10 +44,9 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest){
-            //                        DestroysCoreDataMaintence(result)
+//                                    DestroysCoreDataMaintence(result)
             pin = result
-            //                        pin.removeAll(keepingCapacity: false)
-            //                        pin.removeAll()
+
             for object in pin {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
@@ -95,21 +94,26 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         for pin in pin {
             if sellected?.coordinate.latitude == pin.lat {
                 let pin = pin
-                print(pin)
-                dataController.viewContext.delete(pin)
-                try? dataController.viewContext.save()
-                
+                     dataController.viewContext.delete(pin)
+                for pin in pin.parent! {
+                    dataController.viewContext.delete(pin as! NSManagedObject)
+                     try? dataController.viewContext.save()
+                }
             }
-            
+                try? dataController.viewContext.save()
+        
         }
+         self.mapView.reloadInputViews()
     }
     
     ////////////////////////////////////////////////////////////////////////////
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if isEditing == true {
             selectedPin = mapView.selectedAnnotations.first
-            mapView.removeAnnotation(selectedPin!)
+             mapView.removeAnnotation(selectedPin!)
             pinRemovalOn(selectedPin)
+           
+           
         }else {
             lat = view.annotation?.coordinate.latitude
             long = view.annotation?.coordinate.longitude
@@ -119,11 +123,12 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toPhoto" {
-            let destinationVC = segue.destination as! PhotoCollectionViewController
+            let destinationVC = segue.destination as! PhotoAlbumViewController
             destinationVC.lat = lat!
             destinationVC.long = long!
             destinationVC.dataController = self.dataController
-    
+            
+           
         }
     }
     //Maintence File
