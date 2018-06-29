@@ -27,20 +27,19 @@ class PhotoAlbumViewController: UICollectionViewController {
     // ROLL TIDE
     override func viewDidLoad() {
         
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
         super.viewDidLoad()
         self.imagesData = []
         if self.photos.count == 0 {
             self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
                 let photo = Photo(context: self.dataController.viewContext)
                 photo.imageData = images
-              
                 try? self.dataController.viewContext.save()
-                
                 self.imagesData.append(UIImage(data: images)!)
                 self.collectionView?.reloadData()
                 
             }
-           
+            
         }
         let width = (view.frame.size.width - 20) / 3
         let layout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
@@ -54,18 +53,18 @@ class PhotoAlbumViewController: UICollectionViewController {
         let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest) {
-               photos = result
-
+            photos = result
+            
             for images in photos {
                 self.imagesData.append(UIImage(data: images.imageData!)!)
-               
+                
             }
-
-
-    }
-
-self.collectionView?.reloadData()
-
+            
+            
+        }
+        
+        self.collectionView?.reloadData()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,7 +78,6 @@ self.collectionView?.reloadData()
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // Show the navigation bar on other view controllers
-        print("Save on back")
         try? dataController.viewContext.save()
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -107,7 +105,7 @@ self.collectionView?.reloadData()
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let cell = collectionView.cellForItem(at: indexPath)
-        //        self.imagesSelected.append(self.images[indexPath.row])
+        self.imagesSelected.append(self.imagesData[indexPath.row])
         cell?.layer.borderWidth = 2.0
         cell?.layer.borderColor = UIColor.red.cgColor
         if cell?.layer.borderColor == UIColor.red.cgColor && self.imagesSelected.count > 0 {
@@ -123,9 +121,10 @@ self.collectionView?.reloadData()
             cell?.layer.borderColor = UIColor.clear.cgColor
             print(self.imagesSelected)
             if self.imagesSelected.count == 0 {
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(deletePhotos))
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
             } else {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
+             
             }
             
         }
@@ -143,45 +142,48 @@ self.collectionView?.reloadData()
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //        let cell = UICollectionViewCell()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 120, height: 120))
+        let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 134, height: 135))
         if self.imagesData.count > 0 {
-             let image = self.imagesData[indexPath.row]
+            let image = self.imagesData[indexPath.row]
             imageview.image = image
             cell.contentView.addSubview(imageview)
         }
         return cell
     }
-
+    
     
     // MARK: Functions
-
+    
     
     
     
     // MARK: OBJC functions
     
-        @objc func reloadCollectionImages() {
-//            self.ill = []
-//            self.images = []
-
-//            downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (image) in
-//                self.imagesData = UIImage(data: image)
-//                if self.images.count == 8 {
-//                    self.collectionView?.reloadData()
-//                }
-//                print(self.images.count)
-//
-//            }
-            }
+    @objc func reloadCollectionImages() {
+        self.imagesData = []
+        self.photos = []
+        downloadingImage.getImageWithNew(lat: lat, long: long, controller: dataController) { (images) in
+            let photo = Photo(context: self.dataController.viewContext)
+            photo.imageData = images
+            try? self.dataController.viewContext.save()
+            self.imagesData.append(UIImage(data: images)!)
+            self.collectionView?.reloadData()
+        }
+        
+    }
     @objc func deletePhotos() {
-
-//                for i in self.imagesSelected {
-//                    if self.images.contains(i) {
-//                        let killImage = self.images.index(of: i)
-//                        self.images.remove(at: killImage!)
-//                    }
-//                }
-//                self.collectionView?.reloadData()
+//        let photoDelete = photos(indexPath.row)
+//        dataController.viewContext.delete(photoDelete)
+       
+//        photos.remove(at: indexPath.row)
+        for i in self.imagesSelected {
+            if self.imagesData.contains(i) {
+                let killImage = imagesData.index(of: i)
+                self.imagesData.remove(at: killImage!)
+                 try? dataController.viewContext.save()
+            }
+        }
+        self.collectionView?.reloadData()
     }
 }
 
