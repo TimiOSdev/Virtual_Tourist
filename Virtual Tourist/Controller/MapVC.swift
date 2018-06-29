@@ -22,6 +22,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 10000
+    var photo: Photo!
     var pin: [Pin] = []
     var dataController:DataController!
     var selectedPin:MKAnnotation?
@@ -92,27 +93,25 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     
     fileprivate func pinRemovalOn(_ sellected: MKAnnotation?) {
         for pin in pin {
-            if sellected?.coordinate.latitude == pin.lat {
+            if sellected?.coordinate.latitude == pin.lat && sellected?.coordinate.longitude == pin.long {
                 let pin = pin
-                     dataController.viewContext.delete(pin)
-                for pin in pin.parent! {
-                    dataController.viewContext.delete(pin as! NSManagedObject)
-                     try? dataController.viewContext.save()
-                }
-            }
+                dataController.viewContext.delete(pin)
                 try? dataController.viewContext.save()
+                self.mapView.reloadInputViews()
+            }
+            
         
         }
-         self.mapView.reloadInputViews()
+        
     }
     
     ////////////////////////////////////////////////////////////////////////////
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         if isEditing == true {
             selectedPin = mapView.selectedAnnotations.first
-             mapView.removeAnnotation(selectedPin!)
+            
             pinRemovalOn(selectedPin)
-           
+            mapView.removeAnnotation(selectedPin!)
            
         }else {
             lat = view.annotation?.coordinate.latitude
@@ -128,7 +127,6 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             destinationVC.long = long!
             destinationVC.dataController = self.dataController
             
-           
         }
     }
     //Maintence File
