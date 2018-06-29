@@ -17,8 +17,7 @@ class PhotoAlbumViewController: UICollectionViewController {
     @IBOutlet weak var imageOUT: UIImageView!
     var imageData: Data?
     let downloadingImage = ProfileViewController()
-    var pin: Pin!
-    var images: [Photo] = []
+    var photos: [Photo] = []
     var dataController:DataController!
     var imagesData = [UIImage]()
     var imagesSelected = [UIImage]()
@@ -30,11 +29,11 @@ class PhotoAlbumViewController: UICollectionViewController {
         
         super.viewDidLoad()
         self.imagesData = []
-        if self.images.count == 0 {
+        if self.photos.count == 0 {
             self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
                 let photo = Photo(context: self.dataController.viewContext)
                 photo.imageData = images
-                photo.pin = self.pin
+              
                 try? self.dataController.viewContext.save()
                 
                 self.imagesData.append(UIImage(data: images)!)
@@ -50,13 +49,14 @@ class PhotoAlbumViewController: UICollectionViewController {
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
-//        let predicate = NSPredicate(format: "name IN %@", child)
+        let predicate = NSPredicate(format: "imageData IN %@ ", photos)
+        fetchRequest.predicate = predicate
         let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest) {
-               images = result
+               photos = result
 
-            for images in images {
+            for images in photos {
                 self.imagesData.append(UIImage(data: images.imageData!)!)
                
             }

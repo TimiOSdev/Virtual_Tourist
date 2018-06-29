@@ -22,7 +22,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 10000
-    var photo: Photo!
+//    var photo: Photo!
     var pin: [Pin] = []
     var dataController:DataController!
     var selectedPin:MKAnnotation?
@@ -126,6 +126,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             destinationVC.lat = lat!
             destinationVC.long = long!
             destinationVC.dataController = self.dataController
+            
             
         }
     }
