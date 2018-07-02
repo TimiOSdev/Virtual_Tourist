@@ -9,5 +9,7 @@
 import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
+    let image = UIImage(named: "placeholder")
+    
     
 }

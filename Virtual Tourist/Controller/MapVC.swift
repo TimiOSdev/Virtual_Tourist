@@ -12,17 +12,15 @@ import Alamofire
 import MapKit
 import CoreLocation
 //MARK: GLOBAL VARIABLES
-var selectedAnnotation: MKPointAnnotation?
-var isEditing = false
 
+var isEditing = false
 class MapVC: UIViewController, UIGestureRecognizerDelegate {
+    
     var lat:Double?
     var long: Double?
-    var selectPins = [MKAnnotation]()
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 10000
-//    var photo: Photo!
     var pin: [Pin] = []
     var dataController:DataController!
     var selectedPin:MKAnnotation?
@@ -35,19 +33,16 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editPins))
         mapView.delegate = self
         locationManager.delegate = self
         configureLocationServices()
-
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest){
-//                                    DestroysCoreDataMaintence(result)
+            //                                    DestroysCoreDataMaintence(result)
             pin = result
-
             for object in pin {
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: object.lat , longitude: object.long)
@@ -65,22 +60,14 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     }
     //MARK: ADD and DELETE Pin and functions
     func addHoldTap() {
-    
-            //Long gesture will drop the pin
-            let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
-            singleTap.minimumPressDuration = 0.8
-            singleTap.delaysTouchesBegan = true
-            singleTap.delegate = self
-            mapView.addGestureRecognizer(singleTap)
+        
+        //Long gesture will drop the pin
+        let singleHold = UILongPressGestureRecognizer(target: self, action: #selector(dropPin(sender:)))
+        singleHold.minimumPressDuration = 0.8
+        singleHold.delaysTouchesBegan = true
+        singleHold.delegate = self
+        mapView.addGestureRecognizer(singleHold)
     }
-//    func deleteHoldTap() {
-//
-//        //Long gesture will drop the pin
-//        let doubleTap = UILongPressGestureRecognizer(target: self, action: #selector(removePin(sender:)))
-//        doubleTap.minimumPressDuration = 0.1
-//        doubleTap.delegate = self
-//        mapView.addGestureRecognizer(doubleTap)
-//    }
     func savedPin (lat: Double, long: Double) {
         
         let pin = Pin(context: dataController.viewContext)
@@ -88,7 +75,6 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         pin.long = long
         pin.creationDate = Date()
         try? dataController.viewContext.save()
-        viewDidLoad()
     }
     
     fileprivate func pinRemovalOn(_ sellected: MKAnnotation?) {
@@ -99,20 +85,17 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
                 try? dataController.viewContext.save()
                 self.mapView.reloadInputViews()
             }
-            
-        
         }
-        
     }
     
     ////////////////////////////////////////////////////////////////////////////
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        // If selection and not true it will move to PhotoAlbumViewController
         if isEditing == true {
             selectedPin = mapView.selectedAnnotations.first
-            
             pinRemovalOn(selectedPin)
             mapView.removeAnnotation(selectedPin!)
-           
+            
         }else {
             lat = view.annotation?.coordinate.latitude
             long = view.annotation?.coordinate.longitude
@@ -130,19 +113,17 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             
         }
     }
-    //Maintence File
+    //Maintence File will delete in CoreData
     fileprivate func DestroysCoreDataMaintence(_ result: [Pin]) {
         for object in result {
             dataController.viewContext.delete(object)
         }
     }
-    
-    
-    
-    ///////// END TIDE
 }
 extension MapVC: MKMapViewDelegate{
+    //This will center users on the map
     func centerMapOnUserLocation() {
+        
         guard let coordinate = locationManager.location?.coordinate else { return }
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinate, regionRadius * 2.0, regionRadius * 2.0)
         mapView.setRegion(coordinateRegion, animated: true)
@@ -166,26 +147,21 @@ extension MapVC: MKMapViewDelegate{
             }
             
         }
-
+        
     }
     @objc func editPins() {
+        
         isEditing = true
         mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: true)
-   
         instructionText.text = "Double tap to delete"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneEditing))
     }
     @objc func doneEditing() {
         
-         isEditing = false
+        isEditing = false
         instructionText.text = "Press & hold to drop pin"
-       
-       viewDidLoad()
+        viewDidLoad()
     }
-    
-    
-    /////////////////////////////////////////////////////End of Rip Tide
-    
 }
 extension MapVC: CLLocationManagerDelegate {
     func configureLocationServices() {
@@ -197,7 +173,6 @@ extension MapVC: CLLocationManagerDelegate {
         }
     }
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        
         centerMapOnUserLocation()
     }
 }

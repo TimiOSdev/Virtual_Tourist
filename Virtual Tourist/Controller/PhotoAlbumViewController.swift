@@ -9,12 +9,12 @@
 import UIKit
 import CoreData
 import Foundation
-private let reuseIdentifier = "ImageCollectionCell"
 
+private let reuseIdentifier = "ImageCollectionCell"
 class PhotoAlbumViewController: UICollectionViewController {
+    
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
     @IBOutlet var flowLayout: UICollectionView!
-    @IBOutlet weak var imageOUT: UIImageView!
     var imageData: Data?
     let downloadingImage = ProfileViewController()
     var photos: [Photo] = []
@@ -26,21 +26,11 @@ class PhotoAlbumViewController: UICollectionViewController {
     
     // ROLL TIDE
     override func viewDidLoad() {
-        
+    
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
         super.viewDidLoad()
         self.imagesData = []
-        if self.photos.count == 0 {
-            self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
-                let photo = Photo(context: self.dataController.viewContext)
-                photo.imageData = images
-                try? self.dataController.viewContext.save()
-                self.imagesData.append(UIImage(data: images)!)
-                self.collectionView?.reloadData()
-                
-            }
-            
-        }
+        
         let width = (view.frame.size.width - 20) / 3
         let layout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: width, height: width)
@@ -54,15 +44,23 @@ class PhotoAlbumViewController: UICollectionViewController {
         fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest) {
             photos = result
-            
+            print("Fired")
             for images in photos {
+                
                 self.imagesData.append(UIImage(data: images.imageData!)!)
+            }
+        }
+        if self.photos.count == 0 {
+            self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
+                let photo = Photo(context: self.dataController.viewContext)
+                photo.imageData = images
+                try? self.dataController.viewContext.save()
+                self.imagesData.append(UIImage(data: images)!)
+                self.collectionView?.reloadData()
                 
             }
             
-            
         }
-        
         self.collectionView?.reloadData()
         
     }
@@ -77,7 +75,6 @@ class PhotoAlbumViewController: UICollectionViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // Show the navigation bar on other view controllers
         try? dataController.viewContext.save()
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -91,13 +88,12 @@ class PhotoAlbumViewController: UICollectionViewController {
     // MARK: UICollectionViewDataSource
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
+        
         return 1
     }
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         
         return self.imagesData.count
     }
@@ -105,11 +101,13 @@ class PhotoAlbumViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let cell = collectionView.cellForItem(at: indexPath)
+        
+     
         self.imagesSelected.append(self.imagesData[indexPath.row])
         cell?.layer.borderWidth = 2.0
         cell?.layer.borderColor = UIColor.red.cgColor
         if cell?.layer.borderColor == UIColor.red.cgColor && self.imagesSelected.count > 0 {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos(sender: )))
         }
         
     }
@@ -124,7 +122,7 @@ class PhotoAlbumViewController: UICollectionViewController {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
             } else {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
-             
+                
             }
             
         }
@@ -133,6 +131,7 @@ class PhotoAlbumViewController: UICollectionViewController {
     
     
     fileprivate func DestroysCoreDataMaintence(_ result: [Photo]) {
+        
         for object in result {
             dataController.viewContext.delete(object)
         }
@@ -140,10 +139,17 @@ class PhotoAlbumViewController: UICollectionViewController {
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //        let cell = UICollectionViewCell()
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        
+        
+
+        
         let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 134, height: 135))
+        
+        
         if self.imagesData.count > 0 {
+           
             let image = self.imagesData[indexPath.row]
             imageview.image = image
             cell.contentView.addSubview(imageview)
@@ -151,15 +157,10 @@ class PhotoAlbumViewController: UICollectionViewController {
         return cell
     }
     
-    
-    // MARK: Functions
-    
-    
-    
-    
     // MARK: OBJC functions
     
     @objc func reloadCollectionImages() {
+        
         self.imagesData = []
         self.photos = []
         downloadingImage.getImageWithNew(lat: lat, long: long, controller: dataController) { (images) in
@@ -171,22 +172,22 @@ class PhotoAlbumViewController: UICollectionViewController {
         }
         
     }
-    @objc func deletePhotos() {
-//        let photoDelete = photos(indexPath.row)
-//        dataController.viewContext.delete(photoDelete)
-       
-//        photos.remove(at: indexPath.row)
+    @objc func deletePhotos(sender: Photo) {
+      
         for i in self.imagesSelected {
             if self.imagesData.contains(i) {
                 let killImage = imagesData.index(of: i)
                 self.imagesData.remove(at: killImage!)
-                 try? dataController.viewContext.save()
+                dataController.viewContext.delete(sender)
+                try? dataController.viewContext.save()
+                self.collectionView?.reloadData()
             }
+            self.collectionView?.reloadData()
         }
-        self.collectionView?.reloadData()
     }
-}
-
+        
+        }
+        
 
 
 

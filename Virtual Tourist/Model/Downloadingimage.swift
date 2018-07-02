@@ -12,12 +12,11 @@ import Alamofire
 import SwiftyJSON
 import AlamofireImage
 
-
- private var appDelegate = UIApplication.shared.delegate as! AppDelegate
-
-
-class ProfileViewController: UIViewController {
+private var appDelegate = UIApplication.shared.delegate as! AppDelegate
+class ProfileViewController: NSObject {
+    
     func getImageWith(lat: Double, long: Double, controller: DataController, complete:@escaping (Data)-> Void) {
+        
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -39,38 +38,30 @@ class ProfileViewController: UIViewController {
             .responseJSON { response in
                 if response.result.isSuccess {
                     let JSONback: JSON = JSON(response.result.value!)
-                  
-                    
-             
-                    
                     var count = 0
                     repeat {
-                        
                         imageURLs.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
-                        
                         Alamofire.request("\(imageURLs[count])").responseData { response in
-                            
                             if let image = response.data {
-           
                                 complete(image)
-                                
                             }
                         }
                         count += 1
                     } while count <= 11
-               
+                    
                 }else {
                     debugPrint("HTTP Request failed: \(String(describing: response.result.error))")
                 }
-              
+                
         }
-    
-}
+        
+    }
     
     
     
     
     func getImageWithNew(lat: Double, long: Double, controller: DataController, complete:@escaping (Data)-> Void) {
+        
         /**
          Request
          get https://api.flickr.com/services/rest/
@@ -92,21 +83,13 @@ class ProfileViewController: UIViewController {
             .responseJSON { response in
                 if response.result.isSuccess {
                     let JSONback: JSON = JSON(response.result.value!)
-                    
-                    
-                    
-                    
                     var count = 0
                     repeat {
                         
                         imageURLs.append(URL(string: JSONback["photos"]["photo"][Int(arc4random_uniform(60))]["url_s"].stringValue)!)
-                        
                         Alamofire.request("\(imageURLs[count])").responseData { response in
-                            
                             if let image = response.data {
-                                
                                 complete(image)
-                                
                             }
                         }
                         count += 1
