@@ -109,8 +109,6 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
             destinationVC.lat = lat!
             destinationVC.long = long!
             destinationVC.dataController = self.dataController
-            
-            
         }
     }
     //Maintence File will delete in CoreData
@@ -118,62 +116,64 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
         for object in result {
             dataController.viewContext.delete(object)
         }
+
     }
+    
 }
-extension MapVC: MKMapViewDelegate{
-    //This will center users on the map
-    func centerMapOnUserLocation() {
-        
-        guard let coordinate = locationManager.location?.coordinate else { return }
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinate, regionRadius * 2.0, regionRadius * 2.0)
-        mapView.setRegion(coordinateRegion, animated: true)
-    }
-    //MARK: OBJC objects
-    @objc func dropPin(sender: UITapGestureRecognizer) {
-        //Drop pin on the map
-        if isEditing == false {
-            if sender.state == UIGestureRecognizerState.began {
-                let annotation = MKPointAnnotation()
-                let touchPoint = sender.location(in: mapView)
-                print(touchPoint)
-                let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-                print("This is the map gps coordinate\(touchCoordinate)")
-                annotation.coordinate = CLLocationCoordinate2D(latitude: touchCoordinate.latitude , longitude: touchCoordinate.longitude)
-                mapView.addAnnotation(annotation)
-                //This will save the pin in coreData
-                let lat = Double(touchCoordinate.latitude)
-                let long = Double(touchCoordinate.longitude)
-                savedPin(lat: lat, long: long)
+    extension MapVC: MKMapViewDelegate{
+        //This will center users on the map
+        func centerMapOnUserLocation() {
+            
+            guard let coordinate = locationManager.location?.coordinate else { return }
+            let coordinateRegion = MKCoordinateRegionMakeWithDistance(coordinate, regionRadius * 2.0, regionRadius * 2.0)
+            mapView.setRegion(coordinateRegion, animated: true)
+        }
+        //MARK: OBJC objects
+        @objc func dropPin(sender: UITapGestureRecognizer) {
+            //Drop pin on the map
+            if isEditing == false {
+                if sender.state == UIGestureRecognizerState.began {
+                    let annotation = MKPointAnnotation()
+                    let touchPoint = sender.location(in: mapView)
+                    print(touchPoint)
+                    let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+                    print("This is the map gps coordinate\(touchCoordinate)")
+                    annotation.coordinate = CLLocationCoordinate2D(latitude: touchCoordinate.latitude , longitude: touchCoordinate.longitude)
+                    mapView.addAnnotation(annotation)
+                    //This will save the pin in coreData
+                    let lat = Double(touchCoordinate.latitude)
+                    let long = Double(touchCoordinate.longitude)
+                    savedPin(lat: lat, long: long)
+                }
+                
             }
             
         }
-        
-    }
-    @objc func editPins() {
-        
-        isEditing = true
-        mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: true)
-        instructionText.text = "Double tap to delete"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneEditing))
-    }
-    @objc func doneEditing() {
-        
-        isEditing = false
-        instructionText.text = "Press & hold to drop pin"
-        viewDidLoad()
-    }
-}
-extension MapVC: CLLocationManagerDelegate {
-    func configureLocationServices() {
-        
-        if authorizationStatus == .notDetermined {
-            locationManager.requestAlwaysAuthorization()
-        } else {
-            return
+        @objc func editPins() {
+            
+            isEditing = true
+            mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: true)
+            instructionText.text = "Double tap to delete"
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneEditing))
+        }
+        @objc func doneEditing() {
+            
+            isEditing = false
+            instructionText.text = "Press & hold to drop pin"
+            viewDidLoad()
         }
     }
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        centerMapOnUserLocation()
-    }
+    extension MapVC: CLLocationManagerDelegate {
+        func configureLocationServices() {
+            
+            if authorizationStatus == .notDetermined {
+                locationManager.requestAlwaysAuthorization()
+            } else {
+                return
+            }
+        }
+        func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+            centerMapOnUserLocation()
+        }
 }
 
