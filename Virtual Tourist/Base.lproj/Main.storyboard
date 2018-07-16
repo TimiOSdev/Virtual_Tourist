@@ -91,7 +91,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" reuseIdentifier="ImageCollectionCell" id="liB-DH-Yfb" customClass="CollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" reuseIdentifier="ImageCollectionCell" id="liB-DH-Yfb" customClass="CollectionVC" customModule="Virtual_Tourist">
                                 <rect key="frame" x="0.0" y="0.0" width="134" height="135"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -110,6 +110,9 @@
                                     <constraint firstItem="caL-PD-IOO" firstAttribute="leading" secondItem="liB-DH-Yfb" secondAttribute="leading" id="PYG-i2-HCI"/>
                                     <constraint firstAttribute="trailing" secondItem="caL-PD-IOO" secondAttribute="trailing" id="zjO-dv-zuz"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="imageCell" destination="caL-PD-IOO" id="hhI-Bh-uP6"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -123,6 +126,7 @@
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4vd-Hv-oNE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="53G-4n-c1x" customClass="CollectionVC" customModule="Virtual_Tourist" customModuleProvider="target"/>
                 <view alpha="0.89999997615814209" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yCw-rd-g0w">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                     <subviews>

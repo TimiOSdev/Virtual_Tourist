@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2299F17420E184A900BAE930 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2299F17320E184A900BAE930 /* CollectionViewCell.swift */; };
+		223A3BD220ECB3C700F9F5E3 /* CollectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223A3BD120ECB3C700F9F5E3 /* CollectionVC.swift */; };
 		2299F17620E1865500BAE930 /* Downloadingimage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2299F17520E1865500BAE930 /* Downloadingimage.swift */; };
 		9B18B93826B152779B1EC24E /* Pods_Virtual_Tourist.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D9000003A3EDA1A5ACE5B9C /* Pods_Virtual_Tourist.framework */; };
 		9B35DC6420AE084900BEDBA4 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B35DC6320AE084900BEDBA4 /* DataController.swift */; };
@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2299F17320E184A900BAE930 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		223A3BD120ECB3C700F9F5E3 /* CollectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionVC.swift; sourceTree = "<group>"; };
 		2299F17520E1865500BAE930 /* Downloadingimage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloadingimage.swift; sourceTree = "<group>"; };
 		4D9000003A3EDA1A5ACE5B9C /* Pods_Virtual_Tourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Virtual_Tourist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B35DC6320AE084900BEDBA4 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -72,17 +72,14 @@
 			isa = PBXGroup;
 			children = (
 				9BEF97572053399E00E64C53 /* AppDelegate.swift */,
-				9BEF977120533AF500E64C53 /* Constants */,
-				9BEF977020533AD200E64C53 /* Extensions */,
 				9BEF976E20533A6C00E64C53 /* Controller */,
-				9BEF976D20533A6700E64C53 /* View */,
 				9BEF976C20533A5C00E64C53 /* Model */,
-				9BEF976F20533A8800E64C53 /* Supporting files */,
 				9BEF975B2053399E00E64C53 /* Main.storyboard */,
 				9BEF97612053399E00E64C53 /* Assets.xcassets */,
 				9BEF97632053399E00E64C53 /* LaunchScreen.storyboard */,
 				9BEF97662053399E00E64C53 /* Info.plist */,
 				9BEF975E2053399E00E64C53 /* VirtualTourist.xcdatamodeld */,
+				223A3BD120ECB3C700F9F5E3 /* CollectionVC.swift */,
 			);
 			path = "Virtual Tourist";
 			sourceTree = "<group>";
@@ -96,42 +93,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		9BEF976D20533A6700E64C53 /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		9BEF976E20533A6C00E64C53 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				9BEF97592053399E00E64C53 /* MapVC.swift */,
 				9B42862620B47A2100BB62FC /* PhotoAlbumViewController.swift */,
-				2299F17320E184A900BAE930 /* CollectionViewCell.swift */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		9BEF976F20533A8800E64C53 /* Supporting files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Supporting files";
-			sourceTree = "<group>";
-		};
-		9BEF977020533AD200E64C53 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		9BEF977120533AF500E64C53 /* Constants */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Constants;
 			sourceTree = "<group>";
 		};
 		A0BBFA0E52CDE7AFF09522A7 /* Pods */ = {
@@ -276,9 +244,9 @@
 			files = (
 				9B42862720B47A2100BB62FC /* PhotoAlbumViewController.swift in Sources */,
 				9BEF975A2053399E00E64C53 /* MapVC.swift in Sources */,
-				2299F17420E184A900BAE930 /* CollectionViewCell.swift in Sources */,
 				9B35DC6420AE084900BEDBA4 /* DataController.swift in Sources */,
 				9BEF97602053399E00E64C53 /* VirtualTourist.xcdatamodeld in Sources */,
+				223A3BD220ECB3C700F9F5E3 /* CollectionVC.swift in Sources */,
 				2299F17620E1865500BAE930 /* Downloadingimage.swift in Sources */,
 				9BEF97582053399E00E64C53 /* AppDelegate.swift in Sources */,
 			);

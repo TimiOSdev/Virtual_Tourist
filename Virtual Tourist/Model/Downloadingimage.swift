@@ -13,7 +13,7 @@ import SwiftyJSON
 import AlamofireImage
 
 private var appDelegate = UIApplication.shared.delegate as! AppDelegate
-class ProfileViewController: NSObject {
+class downloadingImagesVC: NSObject {
     
     func getImageWith(lat: Double, long: Double, controller: DataController, complete:@escaping (Data)-> Void) {
         
