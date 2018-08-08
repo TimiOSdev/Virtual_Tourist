@@ -38,22 +38,30 @@ class PhotoAlbumViewController: UICollectionViewController {
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+ let predicate = NSPredicate(format: "pin IN[c] %@", photos)
+  fetchRequest.predicate = predicate
+        let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest) {
-        
-            if result.count == 0 {
-                self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
-                    let photo = Photo(context: self.dataController.viewContext)
-                    photo.imageData = images
-                    try? self.dataController.viewContext.save()
-                    self.imagesData.append(UIImage(data: images)!)
-                    self.collectionView?.reloadData()
-                }
+            photos = result
+            print("Fired")
+            for images in photos {
                 
+                self.imagesData.append(UIImage(data: images.imageData!)!)
             }
         }
+        if self.photos.count == 0 {
 
-        self.collectionView?.reloadData()
-        
+            self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
+                let photo = Photo(context: self.dataController.viewContext)
+                photo.imageData = images
+                try? self.dataController.viewContext.save()
+                self.imagesData.append(UIImage(data: images)!)
+                self.collectionView?.reloadData()
+                
+            }
+            
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -170,10 +178,9 @@ class PhotoAlbumViewController: UICollectionViewController {
         
     }
     @objc func deletePhotos(sender: Photo) {
-        
-        let deletedImage = sender
-        dataController.viewContext.delete(deletedImage)
+        dataController.viewContext.delete(sender)                   
         try? dataController.viewContext.save()
+
     }
     
     
