@@ -39,6 +39,7 @@ class downloadingImagesVC: NSObject {
                 if response.result.isSuccess {
                     let JSONback: JSON = JSON(response.result.value!)
                     var count = 0
+                    
                     repeat {
                         imageURLs.append(URL(string: JSONback["photos"]["photo"][count]["url_s"].stringValue)!)
                         Alamofire.request("\(imageURLs[count])").responseData { response in

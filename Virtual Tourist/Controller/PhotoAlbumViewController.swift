@@ -27,10 +27,8 @@ class PhotoAlbumViewController: UICollectionViewController {
     
     // ROLL TIDE
     override func viewDidLoad() {
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
         super.viewDidLoad()
-//        self.imagesData = []
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Collection", style: .plain, target: self, action: #selector(reloadCollectionImages))
         let width = (view.frame.size.width - 20) / 3
         let layout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
         layout.itemSize = CGSize(width: width, height: width)
