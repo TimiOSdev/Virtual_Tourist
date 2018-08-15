@@ -18,7 +18,7 @@ class PhotoAlbumViewController: UICollectionViewController {
     var imageData: Data?
     var pin: Pin!
     let downloadingImage = downloadingImagesVC()
-    var photos: [Photo] = []
+    var photos: [Pin] = []
     var dataController:DataController!
     var imagesData = [UIImage]()
     var imagesSelected = [UIImage]()
@@ -35,20 +35,20 @@ class PhotoAlbumViewController: UICollectionViewController {
         self.collectionView?.dataSource = self
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
- let predicate = NSPredicate(format: "pin IN[c] %@", photos)
-  fetchRequest.predicate = predicate
-        let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+// let predicate = NSPredicate(format: "photos IN[c] %@")
+//  fetchRequest.predicate = predicate
+//        let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest) {
             photos = result
             print("Fired")
-            for images in photos {
-                
-                self.imagesData.append(UIImage(data: images.imageData!)!)
-            }
+//            for images in photos {
+//
+//                self.imagesData.append(UIImage(data: images.imageData!)!)
+//            }
         }
-        if self.photos.count == 0 {
+        if self.imagesData.count == 0 {
 
             self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
                 let photo = Photo(context: self.dataController.viewContext)
@@ -152,7 +152,12 @@ class PhotoAlbumViewController: UICollectionViewController {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 134, height: 135))
-        if self.imagesData.count > 0 {
+        
+        if self.imagesData.count < 2 {
+    
+            imageview.image = UIImage(named: "placeholder")
+            cell.contentView.addSubview(imageview)
+        }else {
             let image = self.imagesData[indexPath.row]
             imageview.image = image
             cell.contentView.addSubview(imageview)
