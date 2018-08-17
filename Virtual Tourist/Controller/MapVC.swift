@@ -18,6 +18,7 @@ class MapVC: UIViewController, UIGestureRecognizerDelegate {
     
     var lat:Double?
     var long: Double?
+    var creationDate: Date?
     var locationManager = CLLocationManager()
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 10000

@@ -10,6 +10,9 @@ import UIKit
 import CoreData
 import Foundation
 
+
+
+
 private let reuseIdentifier = "ImageCollectionCell"
 class PhotoAlbumViewController: UICollectionViewController {
     
@@ -24,6 +27,7 @@ class PhotoAlbumViewController: UICollectionViewController {
     var imagesSelected = [UIImage]()
     var lat: Double = 0.0
     var long: Double = 0.0
+    var creationdate: Date = Date()
     
     // ROLL TIDE
     override func viewDidLoad() {
@@ -36,29 +40,23 @@ class PhotoAlbumViewController: UICollectionViewController {
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-// let predicate = NSPredicate(format: "photos IN[c] %@")
-//  fetchRequest.predicate = predicate
-//        let sortDescriptor = NSSortDescriptor(key: "imageData", ascending: false)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
         if let result = try? dataController.viewContext.fetch(fetchRequest) {
-            photos = result
-            print("Fired")
-//            for images in photos {
-//
-//                self.imagesData.append(UIImage(data: images.imageData!)!)
-//            }
+            print(result)
         }
-        if self.imagesData.count == 0 {
-
-            self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (images) in
+        if self.photos.count > 2 {
+            
+            
+            
+            
+        } else {
+            self.downloadingImage.getImageWith(lat: lat, long: long, controller: dataController) { (imageData) in
                 let photo = Photo(context: self.dataController.viewContext)
-                photo.imageData = images
+                photo.imageData = imageData
                 try? self.dataController.viewContext.save()
-                self.imagesData.append(UIImage(data: images)!)
+                self.imagesData.append(UIImage(data: imageData)!)
                 self.collectionView?.reloadData()
                 
             }
-            
         }
     }
     
@@ -101,10 +99,10 @@ class PhotoAlbumViewController: UICollectionViewController {
         self.imagesSelected.append(self.imagesData[indexPath.row])
         cell?.layer.borderWidth = 2.0
         cell?.layer.borderColor = UIColor.red.cgColor
-                if cell?.layer.borderColor == UIColor.red.cgColor && self.imagesSelected.count > 0 {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
-
-                }
+        if cell?.layer.borderColor == UIColor.red.cgColor && self.imagesSelected.count > 0 {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete Selected", style: .plain, target: self, action: #selector(deletePhotos))
+            
+        }
     }
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         
@@ -123,38 +121,14 @@ class PhotoAlbumViewController: UICollectionViewController {
         }
         
     }
-    //    fileprivate func DestroysCoreData() {
-    //        let result = self.photos
-    //        for object in result {
-    //            if self.imagesSelected.contains(UIImage(data: object.photos!)!) {
-    //                            dataController.viewContext.delete(object)
-    //                try? dataController.viewContext.save()
-    //            }
-    //
-    //        }
-    //        collectionView?.reloadData()
-    //    }
     
-    //    @objc fileprivate func DestroysCoreDataMaintence() {
-    //
-    //                        DestroysCoreData()
-    //                        for i in self.imagesSelected {
-    //                            if self.imagesData.contains(i) {
-    //                                let killImage = self.imagesData.index(of: i)
-    //                                self.imagesData.remove(at: killImage!)
-    //                                }
-    //
-    //                            }
-    //                            self.collectionView?.reloadData()
-    //    }
-
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         let imageview:UIImageView = UIImageView(frame: CGRect(x: 1, y: 1, width: 134, height: 135))
         
         if self.imagesData.count < 2 {
-    
+            
             imageview.image = UIImage(named: "placeholder")
             cell.contentView.addSubview(imageview)
         }else {
@@ -183,7 +157,14 @@ class PhotoAlbumViewController: UICollectionViewController {
     @objc func deletePhotos(sender: Photo) {
         dataController.viewContext.delete(sender)                   
         try? dataController.viewContext.save()
-
+        
+        for image in self.imagesSelected {
+            let findimage = self.imagesData.index(of: image)
+            self.imagesData.remove(at: findimage!)
+            self.collectionView?.reloadData()
+        }
+   
+        
     }
     
     
